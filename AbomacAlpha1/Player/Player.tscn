@@ -1,0 +1,60 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://cube.png" type="Texture" id=1]
+[ext_resource path="res://Player/src/Player.gd" type="Script" id=2]
+[ext_resource path="res://Particles/JumpParticle.tscn" type="PackedScene" id=3]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 9, 9 )
+
+[node name="Player" type="KinematicBody2D"]
+script = ExtResource( 2 )
+JumpParticle = ExtResource( 3 )
+
+[node name="Sprite" type="Sprite" parent="."]
+modulate = Color( 0.913725, 0.913725, 0.913725, 1 )
+scale = Vector2( 1.25, 1.25 )
+texture = ExtResource( 1 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( 0, 1 )
+shape = SubResource( 1 )
+
+[node name="DashCast" type="RayCast2D" parent="."]
+scale = Vector2( 1, 2 )
+enabled = true
+cast_to = Vector2( 20, 0 )
+collide_with_bodies = false
+
+[node name="JumpBufferTimer" type="Timer" parent="."]
+wait_time = 0.12
+one_shot = true
+
+[node name="WallJumpBufferTimer" type="Timer" parent="."]
+wait_time = 0.12
+one_shot = true
+
+[node name="CoyoteJumpTimer" type="Timer" parent="."]
+wait_time = 0.111
+one_shot = true
+
+[node name="GravityOnTimer" type="Timer" parent="."]
+wait_time = 0.2
+one_shot = true
+
+[node name="IsDashingTimer" type="Timer" parent="."]
+wait_time = 0.5
+one_shot = true
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2( 0, -32 )
+current = true
+zoom = Vector2( 0.9, 0.9 )
+process_mode = 0
+smoothing_enabled = true
+smoothing_speed = 8.0
+
+[connection signal="timeout" from="JumpBufferTimer" to="." method="_on_JumpBufferTimer_timeout"]
+[connection signal="timeout" from="CoyoteJumpTimer" to="." method="_on_CoyoteJumpTimer_timeout"]
+[connection signal="timeout" from="GravityOnTimer" to="." method="_on_GravityOnTimer_timeout"]
+[connection signal="timeout" from="IsDashingTimer" to="." method="_on_IsDashingTimer_timeout"]
